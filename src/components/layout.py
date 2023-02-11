@@ -21,7 +21,7 @@ def create_layout(app: Dash, data: pd.DataFrame, data_dict: dict[str, pd.DataFra
                 className="dropdown-container",
                 children=[
                     year_dropdown.render(app, data, data_dict),
-                    month_dropdown.render(app, data),
+                    month_dropdown.render(app, data, data_dict),
                     category_dropdown.render(app, data),
                     zone_dropdown.render(app,data_dict)
                 ],

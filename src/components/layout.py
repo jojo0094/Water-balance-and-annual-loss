@@ -8,6 +8,7 @@ from src.components import (
     year_dropdown,
     zone_dropdown,
     timeseries_chart_v2,
+    table_chart
 )
 
 
@@ -29,6 +30,7 @@ def create_layout(app: Dash, data: pd.DataFrame, data_dict: dict[str, pd.DataFra
             #bar_chart.render(app, data),
             #pie_chart.render(app, data),
             timeseries_chart_v2.render(app,data_dict),
+            table_chart.render(app,data,data_dict)
 
         ],
     )

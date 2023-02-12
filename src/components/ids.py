@@ -12,3 +12,5 @@ YEAR_DROPDOWN = "year-dropdown"
 SELECT_ALL_YEARS_BUTTON = "select-all-years-button"
 
 ZONE_DROPDOWN = "zone-dropdown"
+
+TABLE_CHART = "table-chart" # peak, avg demand table 

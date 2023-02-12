@@ -1,10 +1,10 @@
 import pandas as pd
 import plotly.express as px
-from dash import Dash, dcc, html
+from dash import Dash, dcc, html, dash_table
 from dash.dependencies import Input, Output
 from typing import Dict
-import dash_table 
 import copy
+import urllib
 
 from ..data.loader import DataSchema
 from . import ids
@@ -69,14 +69,12 @@ def render(app: Dash, data: pd.DataFrame, data_dict: Dict[str,pd.DataFrame]) -> 
     def update_table_chart(
         zone: str
     ) -> html.Div:
-
         HardCodeDict = {
             "2015-2016": {"start_date": "2015-09-01","end_date":"2016-08-31"},
             "2016-2017": {"start_date": "2016-09-01","end_date":"2017-08-31"},
             "2017-2018": {"start_date": "2017-09-01","end_date":"2018-08-31"},
             "2018-2019": {"start_date": "2018-09-01","end_date":"2019-08-31"},
             "2019-2020": {"start_date": "2019-09-01","end_date":"2020-08-31"},
-            
         }
         filtered_data = data_dict[zone]
 
@@ -90,22 +88,28 @@ def render(app: Dash, data: pd.DataFrame, data_dict: Dict[str,pd.DataFrame]) -> 
             cal_dict[year_period]=[valCal.max(),valCal.mean()]
         interim_df = pd.DataFrame(cal_dict).T
         interim_df.rename(columns={0:'Peak Day',1:'Average Day'},inplace=True)
+        interim_df[f'{len(interim_df)} year'] = interim_df.index
 
-        interim_df.columns = pd.MultiIndex.from_tuples(
-            zip([f"    {zone}", '', ''], 
-                interim_df.columns))
-
+        # interim_df.columns = pd.MultiIndex.from_tuples(
+        #     zip([f"    {zone}", '', ''], 
+        #         interim_df.columns))
 
         table_ = dash_table.DataTable(
             id='table',
             columns=[{"name": i, "id": i} for i in interim_df.columns],
             data=interim_df.to_dict("records"),
-            style_cell={'textAlign': 'left'}
+            style_cell={'textAlign': 'left'},
+            export_format='csv'
         )       
 
+        #return html.Div(table_, id=ids.TABLE_CHART)
+        return html.Div([
+            html.H3(f"Historical Peak Day and Average Day Demand (m3/day) - {zone}"),
+            table_
+        ], id=ids.TABLE_CHART)
 
-        return html.Div(table_, id=ids.TABLE_CHART)
 
     return html.Div(id=ids.TABLE_CHART)
+
 
 
